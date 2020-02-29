@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+{% block content%}
+
+{% for i in posts %}
+    {% comment %} <h1> {{i.title}}</h1>
+    <p> By {{ i.author}} on {{i.date_post}}</p>
+    <P> {{i.content}}</P> {% endcomment %}
+
+  <article class="media content-section mb-3" >
+    <img class ="rounded-circle article-img" src="{{ ii.author.profile.image.url }}">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2">{{ i.author }}</a>
+        <small class="text-muted">{{ i.date_post|date:"F d,Y" }}</small>
+      </div>
+      <h3><a class="article-title" style="color:black" href="{% url 'post-detail' i.id%}">{{ i.title }}</a></h3>
+      <p class="article-content">{{ i.content }}</p>
+    </div>
+  </article>
+ {% endfor %}
+
+ {% if is_paginated %}
+  {% comment %} this is for previous page {% endcomment %}
+  {% if page_obj.has_previous %}             
+    <a class="btn btn-outline-info mb-4" href="?page=1"> first </a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"> previous </a>
+  {% endif %}
+  {% comment %} this is for current page  {% endcomment %}
+  {% for num in page_obj.paginator.page_range%}
+    {% if page_obj.number == num%}
+      <a class="btn btn-info mb-4" href="?page={{ num }}"> {{num}} </a>
+    {% elif num > page_obj.number|add:"-3" and  num < page_obj.number|add:"3" %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ num }}"> {{num}} </a>
+    {% endif %}
+  {% endfor%}
+  {% comment %} this is for next page {% endcomment %}
+  {% if page_obj.has_next %}
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}"> next </a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}"> last </a>
+  {% endif %}
+
+ {% endif %}
+
+{% endblock content %}
